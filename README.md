@@ -272,7 +272,7 @@ Untuk fokus pada lalu lintas yang relevan, display filter di Wireshark digunakan
 Implementasi di Wireshark:
 Pada baris filter, diterapkan aturan berikut untuk mengisolasi semua trafik dari dan ke Manwe (dengan asumsi IP Manwe adalah 10.71.1.3):
 
-`ip.src == 192.221.1.3 or ip.dst == 192.221.1.3`
+`ip.src == 10.71.1.3 or ip.dst == 10.71.1.3`
 - Catatan: Filter ini memiliki fungsi yang sama persis dengan filter yang lebih singkat, yaitu ip.addr == 10.71.1.3.
 
 **Hasil Akhir**:
