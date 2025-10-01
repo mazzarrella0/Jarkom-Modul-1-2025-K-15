@@ -1,0 +1,3 @@
+1474				Host Announcement RUTHERFORD-PC, Workstation, Server, NT Workstation
+1564				Host Announcement RUTHERFORD-PC, Workstation, Server, NT Workstation
+1643				Host Announcement RUTHERFORD-PC, Workstation, Server, NT Workstation

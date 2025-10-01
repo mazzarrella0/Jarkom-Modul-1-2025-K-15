@@ -1,0 +1,12 @@
+# Jawaban Soal 17
+# (Isi sesuai hasil analisis final)
+
+Credential : user:password
+Jumlah file malware : X
+Hash file 1 : <sha256>
+Hash file 2 : <sha256>
+Hash file 3 : <sha256>
+Hash file 4 : <sha256>
+Hash file 5 : <sha256>
+
+Flag : <isi flag kalau ada>

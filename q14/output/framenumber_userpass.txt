@@ -1,0 +1,1 @@
+500329  Sep 27, 2025 04:11:38.415429000 WIB     172.19.5.26    192.168.129.101  42314   8000    Timestamps,POST /login.php HTTP/1.1\\r\\n,\\r\\n,Form item: "username" = "saccular",Form item: "password" = "y4v4nn4_k3m3nt4r1"

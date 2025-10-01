@@ -1,0 +1,2 @@
+GET /Documents/Invoice&MSO-Request.doc HTTP/1.1
+GET /knr.exe HTTP/1.1

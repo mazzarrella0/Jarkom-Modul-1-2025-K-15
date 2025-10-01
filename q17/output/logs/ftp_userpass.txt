@@ -1,0 +1,1 @@
+[*] FTP USER/PASS and responses (control channel):

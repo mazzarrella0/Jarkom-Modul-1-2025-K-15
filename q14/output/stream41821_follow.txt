@@ -1,0 +1,27 @@
+
+===================================================================
+Follow: tcp,ascii
+Filter: tcp.stream eq 41821
+Node 0: 172.19.5.26:42314
+Node 1: 192.168.129.101:8000
+235
+POST /login.php HTTP/1.1
+Host: 192.168.129.101:8000
+User-Agent: Fuzz Faster U Fool v2.1.0-dev
+Content-Length: 44
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+username=saccular&password=y4v4nn4_k3m3nt4r1
+	169
+HTTP/1.1 200 OK
+Host: 192.168.129.101:8000
+Date: Fri, 26 Sep 2025 21:11:38 GMT
+Connection: close
+X-Powered-By: PHP/8.4.13
+Content-type: text/html; charset=UTF-8
+
+
+	19
+Invalid credentials
+===================================================================

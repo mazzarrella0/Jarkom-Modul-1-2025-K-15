@@ -1,0 +1,22 @@
+
+===================================================================
+Protocol Hierarchy Statistics
+Filter: 
+
+eth                                      frames:500358 bytes:51572399
+  ip                                     frames:500338 bytes:51570779
+    udp                                  frames:39 bytes:5698
+      data                               frames:15 bytes:1290
+      ssdp                               frames:20 bytes:4060
+      mdns                               frames:4 bytes:348
+    tcp                                  frames:500299 bytes:51565081
+      http                               frames:41606 bytes:12790375
+        urlencoded-form                  frames:41606 bytes:12790375
+      tcp.segments                       frames:41606 bytes:2751335
+        http                             frames:41606 bytes:2751335
+          data-text-lines                frames:41606 bytes:2751335
+  ipv6                                   frames:12 bytes:1284
+    udp                                  frames:12 bytes:1284
+      mdns                               frames:12 bytes:1284
+  arp                                    frames:8 bytes:336
+===================================================================
