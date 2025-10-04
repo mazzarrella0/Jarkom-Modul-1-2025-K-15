@@ -293,7 +293,7 @@ Hasilnya adalah tampilan di Wireshark yang hanya berisi paket-paket di mana Manw
 nc 10.15.43.32 3401
 ```
 
-# 1 How many packets are recorded in the pcapng file? Format: int
+## 1 How many packets are recorded in the pcapng file? Format: int
 
 #### Step 1
 
@@ -304,9 +304,9 @@ Lihat jumlah paket di bagian bawah jendela Wireshark — itu menunjukkan total p
 ```c
 500358
 ```
-![alt text](<Screenshot 2025-10-04 182559.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 182559.png>)
 
-# 2 What are the user that successfully logged in? Format: user:pass
+## 2 What are the user that successfully logged in? Format: user:pass
 
 #### Step 1
 
@@ -318,7 +318,7 @@ frame contains "success"
 
 untuk menemukan paket yang berisi kata "success". 
 
-![alt text](<Screenshot 2025-10-04 182545.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 182545.png>)
 
 #### Step 2
 
@@ -329,7 +329,7 @@ Buka paket relevan dengan `Follow > TCP Stream` untuk membaca percakapan dan amb
 ```c
 n1enna:y4v4nn4_k3m3nt4r1
 ```
-![alt text](<Screenshot 2025-10-04 182456.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 182456.png>)
 
 # 3 In which stream were the credentials found? Format: int
 
@@ -342,7 +342,7 @@ Perhatikan filter pada jendela Follow TCP Stream — akan terlihat `tcp.stream e
 ```c
 41824
 ```
-![alt text](<Screenshot 2025-10-04 182728.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 182728.png>)
 
 # 4 What tools are used for brute force? Format: Hydra v1.8.0-dev
 
@@ -355,7 +355,7 @@ Di tampilan `Follow TCP Stream` biasanya terlihat banner atau nama tool yang dip
 ```c
 Fuzz Faster U Fool v2.1.0-dev
 ```
-![alt text](<Screenshot 2025-10-04 182456-1.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 182456-1.png>)
 
 ### Flag
 
@@ -363,7 +363,7 @@ Fuzz Faster U Fool v2.1.0-dev
 Congratulations! Here is your flag: KOMJAR25{Brut3_F0rc3_N7f6C7vdFVA5f8Rn7I7O7g7nS}
 ```
 
-![alt text](image-11.png)
+![alt text](screenshot/image-11.png)
 
 ## Soal 15
 
@@ -371,7 +371,7 @@ Congratulations! Here is your flag: KOMJAR25{Brut3_F0rc3_N7f6C7vdFVA5f8Rn7I7O7g7
 nc 10.15.43.32 3402
 ```
 
-# 1 What device does Melkor use? Format: string
+## 1 What device does Melkor use? Format: string
 
 #### Step 1
 
@@ -382,10 +382,10 @@ Cari paket GET DESCRIPTOR Response DEVICE. Periksa field `iProduct` atau string 
 ```c
 Keyboard
 ```
-![alt text](<Screenshot 2025-10-04 183419.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 183419.png>)
 
 
-# 2 What did Melkor write? Format: string
+## 2 What did Melkor write? Format: string
 
 #### Step 1
 
@@ -397,7 +397,7 @@ usb.transfer_type == 0x01
 
 Ekspor hasil packet dissections ke file teks, kemudian dekode data HID (hex) dengan skrip `decode_hid.py` untuk mendapatkan teks.
 
-![alt text](image-13.png)
+![alt text](screenshot/image-13.png)
 
 #### Step 2
 
@@ -409,7 +409,7 @@ python decode_hid.py .\hid_packets.txt > .\keyslogfile.txt
 
 untuk menghasilkan pesan yang terenkode. 
 
-![alt text](<Screenshot 2025-10-04 184228.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 184228.png>)
 
 #### Answer
 
@@ -417,7 +417,7 @@ untuk menghasilkan pesan yang terenkode.
 UGx6X3ByMHYxZGVfeTB1cl91czNybjRtZV80bmRfcDRzc3cwcmQ=
 ```
 
-# 3 What is Melkor's secret message? Format: string
+## 3 What is Melkor's secret message? Format: string
 
 #### Step 1
 
@@ -441,7 +441,7 @@ Plz_pr0v1de_y0ur_us3rn4me_4nd_p4ssw0rd
 Congratulations! Here is your flag: KOMJAR25{K3yb0ard_W4rr10r_BRxsRQ8etjElDYMOJBbksIR0d}
 ```
 
-![alt text](image-10.png)
+![alt text](screenshot/image-10.png)
 
 ## Soal 16
 
@@ -449,7 +449,7 @@ Congratulations! Here is your flag: KOMJAR25{K3yb0ard_W4rr10r_BRxsRQ8etjElDYMOJB
 nc 10.15.43.32 3403
 ```
 
-# 1 What credential did the attacker use to log in? Format: user:pass
+## 1 What credential did the attacker use to log in? Format: user:pass
 
 #### Step 1
 
@@ -467,9 +467,9 @@ Lihat paket USER/PASS untuk mendapatkan kredensial login.
 ind@psg420.com:{6r_6e#TfT1p
 ```
 
-![alt text](<Screenshot 2025-10-04 192315.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 192315.png>)
 
-# 2 How many files are suspected of containing malware? Format: int
+## 2 How many files are suspected of containing malware? Format: int
 
 #### Step 1
 
@@ -480,13 +480,13 @@ Buka percakapan FTP dengan `Follow > TCP Stream` — daftar file yang ditransfer
 ```c
 5
 ```
-![alt text](image-14.png)
-![alt text](image-15.png)
-![alt text](image-16.png)
-![alt text](image-17.png)
-![alt text](image-18.png)
+![alt text](screenshot/image-14.png)
+![alt text](screenshot/image-15.png)
+![alt text](screenshot/image-16.png)
+![alt text](screenshot/image-17.png)
+![alt text](screenshot/image-18.png)
 
-# 3 What is the hash of the first file (q.exe)? Format: sha256
+## 3 What is the hash of the first file (q.exe)? Format: sha256
 
 #### Step 1
 
@@ -524,7 +524,7 @@ sha256 q.exe
 ca34b0926cdc3242bbfad1c4a0b42cc2750d90db9a272d92cfb6cb7034d2a3bd
 ```
 
-# 4 What is the hash of the second file (w.exe)? Format: sha256
+## 4 What is the hash of the second file (w.exe)? Format: sha256
 
 #### Step 1
 
@@ -550,7 +550,7 @@ sha256 w.exe
 08eb941447078ef2c6ad8d91bb2f52256c09657ecd3d5344023edccf7291e9fc
 ```
 
-# 5 What is the hash of the third file (e.exe)? Format: sha256
+## 5 What is the hash of the third file (e.exe)? Format: sha256
 
 #### Step 1
 
@@ -576,7 +576,7 @@ sha256 e.exe
 32e1b3732cd779af1bf7730d0ec8a7a87a084319f6a0870dc7362a15ddbd3199
 ```
 
-# 6 What is the hash of the third file (r.exe)? Format: sha256
+## 6 What is the hash of the third file (r.exe)? Format: sha256
 
 #### Step 1
 
@@ -598,7 +598,7 @@ sha256 r.exe
 4ebd58007ee933a0a8348aee2922904a7110b7fb6a316b1c7fb2c6677e613884
 ```
 
-# 7 What is the hash of the third file (t.exe)? Format: sha256
+## 7 What is the hash of the third file (t.exe)? Format: sha256
 
 #### Step 1
 
@@ -619,7 +619,7 @@ sha256 t.exe
 ```c
 10ce4b79180a2ddd924fdc95951d968191af2ee3b7dfc96dd6a5714dbeae613a
 ```
-![alt text](<Screenshot 2025-10-01 230351.png>)
+![alt text](<screenshot/Screenshot 2025-10-01 230351.png>)
 
 ### Flag
 
@@ -627,7 +627,7 @@ sha256 t.exe
 Congratulations! Here is your flag: KOMJAR25{Y0u_4r3_4_g00d_4nalyz3r_iDYON1mAHIfDzG2S49awKOBRm}
 ```
 
-![alt text](image-9.png)
+![alt text](screenshot/image-9.png)
 
 ## Soal 17
 
@@ -635,7 +635,7 @@ Congratulations! Here is your flag: KOMJAR25{Y0u_4r3_4_g00d_4nalyz3r_iDYON1mAHIf
 nc 10.15.43.32 3404
 ```
 
-# 1 What is the name of the first suspicious file? Format: file.exe
+## 1 What is the name of the first suspicious file? Format: file.exe
 
 #### Step 1
 
@@ -650,9 +650,9 @@ Periksa file yang diekspor; salah satunya adalah `Invoice&MSO-Request.doc`.
 ```c
 Invoice&MSO-Request.doc
 ```
-![alt text](<Screenshot 2025-10-04 195334.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 195334.png>)
 
-# 2 What is the name of the second suspicious file? Format: file.exe
+## 2 What is the name of the second suspicious file? Format: file.exe
 
 #### Step 1
 
@@ -663,9 +663,9 @@ Dengan metode yang sama (`Export Objects > HTTP`) temukan file kedua yang bernam
 ```c
 knr.exe
 ```
-![alt text](<Screenshot 2025-10-04 195334-1.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 195334-1.png>)
 
-# 3 What is the hash of the second suspicious file (knr.exe)? Format: sha256
+## 3 What is the hash of the second suspicious file (knr.exe)? Format: sha256
 
 #### Step 1
 
@@ -691,7 +691,7 @@ sha256 knr.exe
 Congratulations! Here is your flag: KOMJAR25{M4ster_4n4lyzer_1xcg3WUUjKpux80gm8tEdFgL0}
 ```
 
-![alt text](image-8.png)
+![alt text](screenshot/image-8.png)
 
 ## Soal 18
 
@@ -699,7 +699,7 @@ Congratulations! Here is your flag: KOMJAR25{M4ster_4n4lyzer_1xcg3WUUjKpux80gm8t
 nc 10.15.43.32 3405
 ```
 
-# 1 How many files are suspected of containing malware? Format: int
+## 1 How many files are suspected of containing malware? Format: int
 
 #### Step 1
 
@@ -714,8 +714,10 @@ Periksa nama file — dua file menggunakan pola URL-encoded (`%5cWINDOWS%5c...`)
 ```c
 2
 ```
-![alt text](<Screenshot 2025-10-04 200703.png>)
-# 2 What is the name of the first malicious file? Format: file.exe
+![alt text](<screenshot/Screenshot 2025-10-04 200703.png>)
+
+
+## 2 What is the name of the first malicious file? Format: file.exe
 
 #### Step 1
 
@@ -739,7 +741,7 @@ Dari hasil export SMB, catat nama file kedua yang mencurigakan.
 oiku9bu68cxqenfmcsos2aek6t07_guuisgxhllixv8dx2eemqddnhyh46l8n_di.exe
 ```
 
-# 4 What is the hash of the first malicious file? Format: sha256
+## 4 What is the hash of the first malicious file? Format: sha256
 
 #### Step 1
 
@@ -755,7 +757,7 @@ sha256 %5cWINDOWS%5cd0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0
 59896ae5f3edcb999243c7bfdc0b17eb7fe28f3a66259d797386ea470c010040
 ```
 
-# 5 What is the hash of the second malicious file? Format: sha256
+## 5 What is the hash of the second malicious file? Format: sha256
 
 #### Step 1
 
@@ -777,8 +779,8 @@ cf99990bee6c378cbf56239b3cc88276eec348d82740f84e9d5c343751f82560
 Congratulations! Here is your flag: KOMJAR25{Y0u_4re_g0dl1ke_e8XQLgCWiRzzsqZm9XqENF6bY}
 ```
 
-![alt text](image-6.png)
-![alt text](image-7.png)
+![alt text](screenshot/image-6.png)
+![alt text](screenshot/image-7.png)
 
 
 ## Soal 19
@@ -787,7 +789,7 @@ Congratulations! Here is your flag: KOMJAR25{Y0u_4re_g0dl1ke_e8XQLgCWiRzzsqZm9Xq
 nc 10.15.43.32 3406
 ```
 
-# 1 Who sent the threatening message? Format: string (name)
+## 1 Who sent the threatening message? Format: string (name)
 
 #### Step 1
 
@@ -802,9 +804,9 @@ Baca konten email untuk menemukan nama pengirim.
 ```c
 Your Life
 ```
-![alt text](<Screenshot 2025-10-04 204727.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 204727.png>)
 
-# 2 How much ransom did the attacker demand ($)? Format: int
+## 2 How much ransom did the attacker demand ($)? Format: int
 
 #### Step 1
 
@@ -816,7 +818,7 @@ Dari isi email (hasil Follow TCP Stream) cari angka permintaan tebusan dalam dol
 1600
 ```
 
-# 3 What is the attacker's bitcoin wallet? Format: string
+## 3 What is the attacker's bitcoin wallet? Format: string
 
 #### Step 1
 
@@ -827,14 +829,14 @@ Baca isi email (Follow TCP Stream) dan salin alamat wallet BTC yang tercantum.
 ```c
 1CWHmuF8dHt7HBGx5RKKLgg9QA2GmE3UyL
 ```
-![alt text](<Screenshot 2025-10-04 204808.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 204808.png>)
 
 ### Flag
 
 ```c
 Congratulations! Here is your flag: KOMJAR25{Y0u_4re_J4rk0m_G0d_uYgq9qyc7cdrJ2F5gyBt0otqK}
 ```
-![alt text](image-5.png)
+![alt text](screenshot/image-5.png)
 
 
 ## Soal 20
@@ -843,7 +845,7 @@ Congratulations! Here is your flag: KOMJAR25{Y0u_4re_J4rk0m_G0d_uYgq9qyc7cdrJ2F5
 nc 10.15.43.32 3407
 ```
 
-# 1 What encryption method is used? Format: string
+## 1 What encryption method is used? Format: string
 
 #### Step 1
 
@@ -861,7 +863,7 @@ untuk melihat ServerHello dan cipher yang dipilih.
 TLS
 ```
 
-# 2 What is the name of the malicious file placed by the attacker? Format: file.exe
+## 2 What is the name of the malicious file placed by the attacker? Format: file.exe
 
 #### Step 1
 
@@ -908,5 +910,5 @@ Congratulations! H
 ```
 
 
-![alt text](image.png)
+![alt text](screenshot/image.png)
 
