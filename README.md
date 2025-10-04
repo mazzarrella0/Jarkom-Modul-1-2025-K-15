@@ -863,6 +863,50 @@ TLS
 
 # 2 What is the name of the malicious file placed by the attacker? Format: file.exe
 
-![alt text](screenshot/image-12.png)
+#### Step 1
 
+Jika tersedia `keylogs.txt`, masukkan pada Wireshark Preferences → TLS supaya Wireshark dapat mendekripsi trafik TLS dan menampilkan isi HTTP.
+
+#### Step 2
+
+Gunakan filter HTTP:
+
+```c
+http.response.code == 200
+```
+
+ikuti `Follow > TCP Stream` pada respons 200 untuk menemukan nama file yang diunduh (contoh: `invest_20.dll`). 
+
+#### Answer
+
+```c
+invest_20.dll
+```
+
+### Question 3
+
+What is the hash of the file containing the malware? Format: sha256
+
+#### Step 1
+
+Simpan file yang diekspor (invest_20.dll), lalu hitung SHA256:
+
+```c
+sha256 invest_20.dll
+```
+
+#### Answer
+
+```c
+31cf42b2a7c5c558f44cfc67684cc344c17d4946d3a1e0b2cecb8eb58173cb2f
+```
+
+### Flag
+
+```c
+Congratulations! H
+```
+
+
+![alt text](image.png)
 
