@@ -863,6 +863,6 @@ TLS
 
 # 2 What is the name of the malicious file placed by the attacker? Format: file.exe
 
-![alt text](image-12.png)
+![alt text](screenshot/image-12.png)
 
 
