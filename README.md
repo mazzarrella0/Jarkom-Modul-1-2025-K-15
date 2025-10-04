@@ -524,6 +524,8 @@ sha256 q.exe
 ca34b0926cdc3242bbfad1c4a0b42cc2750d90db9a272d92cfb6cb7034d2a3bd
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-04 235307.png>)
+
 ## 4 What is the hash of the second file (w.exe)? Format: sha256
 
 #### Step 1
@@ -549,6 +551,8 @@ sha256 w.exe
 ```c
 08eb941447078ef2c6ad8d91bb2f52256c09657ecd3d5344023edccf7291e9fc
 ```
+
+![alt text](<screenshot/Screenshot 2025-10-04 235313.png>)
 
 ## 5 What is the hash of the third file (e.exe)? Format: sha256
 
@@ -576,6 +580,8 @@ sha256 e.exe
 32e1b3732cd779af1bf7730d0ec8a7a87a084319f6a0870dc7362a15ddbd3199
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-04 235320.png>)
+
 ## 6 What is the hash of the third file (r.exe)? Format: sha256
 
 #### Step 1
@@ -598,6 +604,8 @@ sha256 r.exe
 4ebd58007ee933a0a8348aee2922904a7110b7fb6a316b1c7fb2c6677e613884
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-04 235325.png>)
+
 ## 7 What is the hash of the third file (t.exe)? Format: sha256
 
 #### Step 1
@@ -619,7 +627,7 @@ sha256 t.exe
 ```c
 10ce4b79180a2ddd924fdc95951d968191af2ee3b7dfc96dd6a5714dbeae613a
 ```
-![alt text](<screenshot/Screenshot 2025-10-01 230351.png>)
+![alt text](<screenshot/Screenshot 2025-10-04 235330.png>)
 
 ### Flag
 
@@ -685,6 +693,8 @@ sha256 knr.exe
 749e161661290e8a2d190b1a66469744127bc25bf46e5d0c6f2e835f4b92db18
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-05 000244.png>)
+
 ### Flag
 
 ```c
@@ -728,6 +738,7 @@ Dari hasil export SMB, catat nama file pertama yang mencurigakan.
 ```c
 d0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0fvf6.exe
 ```
+![alt text](<screenshot/Screenshot 2025-10-05 000455.png>)
 
 # 3 Apa nama file berbahaya yang kedua? Format: file.exe
 
@@ -740,6 +751,8 @@ Dari hasil export SMB, catat nama file kedua yang mencurigakan.
 ```c
 oiku9bu68cxqenfmcsos2aek6t07_guuisgxhllixv8dx2eemqddnhyh46l8n_di.exe
 ```
+
+![alt text](<screenshot/Screenshot 2025-10-05 000455.png>)
 
 ## 4 What is the hash of the first malicious file? Format: sha256
 
@@ -757,6 +770,8 @@ sha256 %5cWINDOWS%5cd0p2nc6ka3f_fixhohlycj4ovqfcy_smchzo_ub83urjpphrwahjwhv_o5c0
 59896ae5f3edcb999243c7bfdc0b17eb7fe28f3a66259d797386ea470c010040
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-05 000609.png>)
+
 ## 5 What is the hash of the second malicious file? Format: sha256
 
 #### Step 1
@@ -772,6 +787,8 @@ sha256 %5cWINDOWS%5coiku9bu68cxqenfmcsos2aek6t07_guuisgxhllixv8dx2eemqddnhyh46l8
 ```c
 cf99990bee6c378cbf56239b3cc88276eec348d82740f84e9d5c343751f82560
 ```
+
+![alt text](<screenshot/Screenshot 2025-10-05 000617.png>)
 
 ### Flag
 
@@ -818,6 +835,8 @@ Dari isi email (hasil Follow TCP Stream) cari angka permintaan tebusan dalam dol
 1600
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-05 000820.png>)
+
 ## 3 What is the attacker's bitcoin wallet? Format: string
 
 #### Step 1
@@ -863,6 +882,8 @@ untuk melihat ServerHello dan cipher yang dipilih.
 TLS
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-05 001008.png>)
+
 ## 2 What is the name of the malicious file placed by the attacker? Format: file.exe
 
 #### Step 1
@@ -885,6 +906,8 @@ ikuti `Follow > TCP Stream` pada respons 200 untuk menemukan nama file yang diun
 invest_20.dll
 ```
 
+![alt text](<screenshot/Screenshot 2025-10-05 002345.png>)
+
 ### Question 3
 
 What is the hash of the file containing the malware? Format: sha256
@@ -902,6 +925,8 @@ sha256 invest_20.dll
 ```c
 31cf42b2a7c5c558f44cfc67684cc344c17d4946d3a1e0b2cecb8eb58173cb2f
 ```
+
+![alt text](<screenshot/Screenshot 2025-10-05 002509.png>)
 
 ### Flag
 
