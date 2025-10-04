@@ -1,0 +1,137 @@
+--Arasfjasu7
+Content-Disposition: form-data; name="proclist"
+
+Empty
+--Arasfjasu7
+Content-Disposition: form-data; name="sysinfo"
+
+DOMAIN GC
+---------------------------------------------------------------
+COMPUTERS:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+USERS:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+GROUPS:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 1
+
+SITES:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+OUs:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+---------------------------------------------------------------
+
+DOMAIN Cliffstone-DC.cliffstone.net
+---------------------------------------------------------------
+COMPUTERS:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+USERS:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+GROUPS:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+SITES:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+OUs:
+POS found: 0
+REG found: 0
+CASH found: 0
+LANE found: 0
+STORE found: 0
+RETAIL found: 0
+BOH found: 0
+ALOHA found: 0
+MICROS found: 0
+TERM found: 0
+
+---------------------------------------------------------------
+
+--Arasfjasu7--
+
