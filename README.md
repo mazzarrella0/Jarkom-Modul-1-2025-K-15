@@ -285,7 +285,442 @@ Pada baris filter, diterapkan aturan berikut untuk mengisolasi semua trafik dari
 **Hasil Akhir**:
 Hasilnya adalah tampilan di Wireshark yang hanya berisi paket-paket di mana Manwe adalah pengirim atau penerima. Hasil capture ini kemudian dapat disimpan sebagai bukti pengerjaan.
 
+### Soal 7: Membuat Config agar tidak hilang ketika di restart
 
+Langkah-langkah yang saya lakukan adalah dengan masuk ke GNS3 Client lalu melakukan editing di config baik router dan juga client dengan cara klik kanan di simbolnya : Lalu menekan edit config dan perbarui confignya (misal ini eru, untuk client yang perlu di tambahkan hanya echo nameserver ... saja : Restart ulang dan ketika login ke Router ataupun Client maka akan otomatis menjalankan config tersebut.
+
+#### Penjelasan Script Konfigurasi FTP Server (setup_ftp_server_final.sh)
+
+Script ini bertujuan untuk mengotomatisasi seluruh proses instalasi dan konfigurasi server FTP menggunakan vsftpd (Very Secure FTP Daemon) di sistem berbasis Debian/Ubuntu. Berikut adalah rincian dari setiap bagian script:
+
+```bash
+#!/bin/bash
+
+# setup_ftp_server_final.sh 
+# Hentikan skrip jika ada perintah yang gagal
+set -e
+
+# --- PENGATURAN AWAL ---
+AINUR_PASS="ainur123"
+MELKOR_PASS="melkor123"
+
+echo " ^=^z^` Memulai skrip konfigurasi server vsftpd (versi perbaikan)..."
+
+# --- 1. INSTALASI DAN PEMBUATAN DIREKTORI ---
+echo " ^z^y  ^o  Memperbarui daftar paket dan menginstal vsftpd..."
+apt-get update > /dev/null
+apt-get install -y vsftpd
+
+echo " ^=^s^a Membuat direktori yang dibutuhkan..."
+mkdir -p /srv/ftp/shared
+mkdir -p /etc/vsftpd_user_conf
+
+# --- 2. PERBAIKAN MASALAH SHELL ---
+echo " ^=^t  Memastikan shell '/usr/sbin/nologin' valid di /etc/shells..."
+# Menambahkan shell jika belum ada di dalam file
+if ! grep -q "/usr/sbin/nologin" /etc/shells; then
+    echo "/usr/sbin/nologin" >> /etc/shells
+fi
+
+# --- 3. PEMBUATAN USER DAN PENGATURAN PASSWORD OTOMATIS ---
+# User ainur
+if id -u "ainur" >/dev/null 2>&1; then
+    echo " ^=^q  User 'ainur' sudah ada, hanya mengatur ulang password."
+else
+    echo " ^~^u Membuat user 'ainur'..."
+    useradd -d /srv/ftp/shared -s /usr/sbin/nologin ainur
+fi
+echo " ^=^t^q Mengatur password untuk 'ainur' menjadi '${AINUR_PASS}'..."
+echo "ainur:${AINUR_PASS}" | chpasswd
+
+# User melkor
+if id -u "melkor" >/dev/null 2>&1; then
+    echo " ^=^q  User 'melkor' sudah ada, hanya mengatur ulang password."
+else
+    echo " ^~^u Membuat user 'melkor'..."
+    useradd -m -s /usr/sbin/nologin melkor
+fi
+echo " ^=^t^q Mengatur password untuk 'melkor' menjadi '${MELKOR_PASS}'..."
+echo "melkor:${MELKOR_PASS}" | chpasswd
+
+# Atur kepemilikan direktori
+echo " ^=^n  Mengatur kepemilikan direktori /srv/ftp/shared untuk user 'ainur'."
+chown ainur:ainur /srv/ftp/shared
+
+# --- 4. KONFIGURASI VSFTPD (METODE BARU) ---
+echo " ^=^t  Menulis file konfigurasi utama /etc/vsftpd.conf dengan metode blokir userlist..."
+cat <<EOF > /etc/vsftpd.conf
+listen=YES
+listen_ipv6=NO
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+chroot_local_user=YES
+allow_writeable_chroot=YES
+dirmessage_enable=YES
+use_localtime=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+pam_service_name=vsftpd
+tcp_wrappers=YES
+
+# --- Konfigurasi spesifik untuk user ---
+user_config_dir=/etc/vsftpd_user_conf
+
+# --- Konfigurasi Blokir User ---
+userlist_enable=YES
+userlist_file=/etc/vsftpd.user_list
+userlist_deny=YES
+EOF
+
+echo " ^|^m  ^o  Menulis konfigurasi khusus untuk 'ainur' (IZINKAN TULIS)..."
+echo "write_enable=YES" > /etc/vsftpd_user_conf/ainur
+
+echo " ^=^z  Membuat daftar blokir dan memasukkan 'melkor' ke dalamnya..."
+echo "melkor" > /etc/vsftpd.user_list
+
+# --- 5. KONFIGURASI KEAMANAN (TCP WRAPPERS) ---
+echo " ^=^t^r Mengizinkan koneksi vsftpd melalui TCP Wrappers di /etc/hosts.allow..."
+if ! grep -q "vsftpd: ALL" /etc/hosts.allow; then
+    echo "vsftpd: ALL" >> /etc/hosts.allow
+fi
+
+# --- 6. RESTART LAYANAN ---
+echo " ^=^t^d Merestart layanan vsftpd untuk menerapkan semua perubahan..."
+/etc/init.d/vsftpd restart
+
+echo " ^|^e Konfigurasi server FTP selesai!"
+echo "   - User 'ainur' (pass: ${AINUR_PASS}) seharusnya bisa login dan read/write."
+echo "   - User 'melkor' (pass: ${MELKOR_PASS}) seharusnya DITOLAK saat login."
+echo "Silakan lakukan pengujian akhir dari node Manwe."
+```
+
+Analisis Per Bagian
+Pengaturan Awal
+#!/bin/bash: Ini adalah shebang. Baris ini memberi tahu sistem bahwa script harus dieksekusi menggunakan bash.
+set -e: Perintah ini memastikan script akan langsung berhenti jika ada satu perintah yang gagal (mengembalikan status error). Ini penting untuk mencegah konfigurasi yang salah atau tidak lengkap.
+AINUR_PASS dan MELKOR_PASS: Mendefinisikan password untuk user ainur dan melkor dalam variabel. Ini membuat script lebih mudah dibaca dan dikelola.
+
+Instalasi dan Pembuatan Direktori
+apt-get update > /dev/null: Memperbarui daftar paket dari repository. Outputnya dialihkan ke /dev/null agar tidak memenuhi layar.
+apt-get install -y vsftpd: Menginstal paket vsftpd. Opsi -y otomatis menjawab "yes" untuk semua konfirmasi.
+mkdir -p ...: Membuat direktori yang dibutuhkan. /srv/ftp/shared akan menjadi direktori home untuk user ainur, dan /etc/vsftpd_user_conf untuk menyimpan konfigurasi spesifik per user. Opsi -p memastikan direktori induk dibuat jika belum ada.
+
+Perbaikan Masalah Shell
+Beberapa sistem keamanan vsftpd mengharuskan shell login user terdaftar di /etc/shells. User FTP kita menggunakan /usr/sbin/nologin agar mereka tidak bisa login ke shell sistem, hanya bisa mengakses FTP. Script ini memeriksa (grep -q) apakah /usr/sbin/nologin sudah ada di file /etc/shells. Jika tidak, baris tersebut akan ditambahkan.
+
+Pembuatan User dan Pengaturan Password
+if id -u "user" ...: Perintah ini memeriksa apakah user (ainur atau melkor) sudah ada di sistem. Jika sudah, script hanya akan mengatur ulang password. Jika belum, user baru akan dibuat.
+useradd -d /srv/ftp/shared -s /usr/sbin/nologin ainur: Membuat user ainur dengan home direktori di /srv/ftp/shared dan shell login diatur ke /usr/sbin/nologin.
+useradd -m -s /usr/sbin/nologin melkor: Membuat user melkor. Opsi -m membuat home direktori default untuknya (yaitu /home/melkor).
+echo "user:password" | chpasswd: Ini adalah cara non-interaktif untuk mengatur password user. chpasswd membaca format user:password dari input dan langsung mengubahnya.
+chown ainur:ainur ...: Mengubah kepemilikan direktori /srv/ftp/shared menjadi milik user dan grup ainur.
+
+Konfigurasi VSFTPD
+cat <<EOF > /etc/vsftpd.conf: Perintah ini menulis semua teks di antara <<EOF dan EOF ke dalam file /etc/vsftpd.conf, menimpa konten yang ada.
+Opsi Penting di vsftpd.conf:
+
+local_enable=YES: Mengizinkan user lokal (yang ada di /etc/passwd) untuk login.
+write_enable=YES: Secara global mengizinkan perintah tulis (upload, delete, rename).
+chroot_local_user=YES: "Mengunci" user di dalam home direktori mereka setelah login.
+allow_writeable_chroot=YES: Diperlukan jika direktori chroot (home) memiliki izin tulis.
+user_config_dir=/etc/vsftpd_user_conf: Menentukan direktori untuk file konfigurasi per-user.
+userlist_enable=YES, userlist_file=..., userlist_deny=YES: Mengaktifkan fitur userlist. Dengan userlist_deny=YES, semua user yang namanya ada di file /etc/vsftpd.user_list akan diblokir.
+echo "write_enable=YES" > .../ainur: Membuat file konfigurasi khusus untuk ainur. Meskipun write_enable sudah YES secara global, ini adalah contoh bagaimana kita bisa menimpa pengaturan untuk user tertentu.
+echo "melkor" > /etc/vsftpd.user_list: Menambahkan melkor ke daftar blokir. Karena userlist_deny=YES, melkor tidak akan bisa login.
+Konfigurasi Keamanan (TCP Wrappers)
+TCP Wrappers adalah lapisan keamanan tambahan. File /etc/hosts.allow dan /etc/hosts.deny digunakan untuk mengontrol akses ke layanan jaringan.
+echo "vsftpd: ALL" >> /etc/hosts.allow: Menambahkan aturan yang secara eksplisit mengizinkan semua koneksi ke layanan vsftpd.
+
+Restart Layanan
+/etc/init.d/vsftpd restart: Merestart layanan vsftpd agar semua perubahan konfigurasi yang telah dibuat dapat diterapkan.
+
+Output Akhir
+echo ...: Memberikan pesan konfirmasi kepada pengguna bahwa script telah selesai dijalankan dan merangkum hasil yang diharapkan: ainur bisa login, melkor diblokir.
+
+### Soal 8: Download File dan Upload via FTP dari Client (Ulmo)
+Script ini mensimulasikan tugas seorang client (di node ulmo) yang perlu mengunduh file dari internet dan kemudian mengunggahnya ke server FTP yang telah kita siapkan sebelumnya (di node eru dengan IP 10.71.1.1). Script ini harus dijalankan sebagai user yang memiliki akses FTP, dalam kasus ini adalah ainur.
+```
+#!/bin/bash
+
+set -e
+
+# di ulmo login ainur
+
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=11ra_yTV_adsPIXeIPMSt0vrxCBZu0r33' -O cuaca.zip
+
+apt-get update > /dev/null
+apt-get install -y ftp
+
+ftp -n 10.71.1.1 <<EOF
+user $FTP_USER $FTP_PASS
+binary
+put cuaca.zip
+bye
+EOF
+```
+
+Analisis Script 📜
+set -e
+Seperti sebelumnya, perintah ini akan menghentikan eksekusi script jika terjadi kesalahan. Ini penting untuk memastikan kita tahu jika ada langkah yang gagal, misalnya jika download gagal atau koneksi FTP ditolak.
+
+Download File dari Internet
+wget ...: Perintah ini menggunakan wget untuk mengunduh file dari internet.
+--no-check-certificate: Opsi ini memberitahu wget untuk tidak memverifikasi sertifikat SSL dari server. Ini terkadang diperlukan jika ada masalah dengan sertifikat keamanan situs sumber.
+'https://docs.google.com/...': Ini adalah URL langsung untuk mengunduh file dari Google Drive. -O cuaca.zip`: Opsi ini menentukan nama file output. File yang diunduh akan disimpan dengan nama cuaca.zip di direktori saat ini.
+
+Instalasi FTP Client
+apt-get update > /dev/null: Memperbarui daftar paket di sistem client (ulmo).
+apt-get install -y ftp: Memasang paket ftp yang menyediakan program untuk terhubung ke server FTP. Tanpa ini, perintah ftp tidak akan ditemukan.
+
+Proses Upload ke Server FTP
+ftp -n 10.71.1.1 <<EOF: Bagian ini memulai koneksi FTP ke server di 10.71.1.1.
+-n: Mencegah ftp mencoba login otomatis di awal.
+<<EOF: Ini disebut Here Document. Ini memungkinkan kita untuk memasukkan serangkaian perintah ke dalam program ftp seolah-olah kita mengetiknya secara manual. Semua baris hingga EOF berikutnya akan menjadi input untuk perintah ftp.
+user $FTP_USER $FTP_PASS: Ini adalah perintah login. PENTING: $FTP_USER dan $FTP_PASS adalah variabel lingkungan (environment variables). Anda harus mengatur nilainya di terminal sebelum menjalankan script ini. Contoh:
+
+```
+export FTP_USER=ainur
+export FTP_PASS=ainur123
+./nama_script.sh
+```
+binary: Mengubah mode transfer file menjadi biner. Ini sangat penting untuk file non-teks seperti .zip, gambar, atau video untuk mencegah file menjadi rusak saat transfer.
+put cuaca.zip: Ini adalah perintah untuk mengunggah (put) file cuaca.zip dari client (ulmo) ke server FTP.
+bye: Perintah untuk keluar dari sesi FTP dan menutup koneksi.
+
+### Soal 9: Mengubah Hak Akses User dan Troubleshooting
+Soal ini merupakan skenario gabungan yang melibatkan manajemen hak akses user di server FTP dan proses troubleshooting (pemecahan masalah) umum yang terjadi saat bekerja dengan virtual environment seperti GNS3, di mana konfigurasi bisa hilang setelah node di-restart.
+
+Ringkasan Perintah dan Langkah-langkah Bash
+```
+# Ringkasan command untuk Soal 9, termasuk troubleshooting.
+
+### BAGIAN 1: PERSIAPAN DI SERVER ERU ###
+
+# 1. Download file 'kitab_penciptaan.zip' ke Eru.
+wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=11ua2KgBu3MnHEIjhBnzqqv2RMEiJsILY' -O kitab_penciptaan.zip
+
+# 2. Pindah file (gagal karena node di-restart, direktori tidak ada).
+# mv kitab_penciptaan.zip /srv/ftp/shared/
+
+# SOLUSI: Jalankan ulang skrip setup FTP (dari Soal 7) untuk membangun ulang server.
+# ./setup_ftp_server_final.sh
+
+# 3. Ulangi unduh dan pindah file (sekarang berhasil).
+wget --no-check-certificate 'https://drive.google.com/uc?export=download&id=11ua2KgBu3MnHEIjhBnzqqv2RMEiJsILY' -O kitab_penciptaan.zip
+mv kitab_penciptaan.zip /srv/ftp/shared/
+
+# 4. Ubah hak akses 'ainur' menjadi read-only.
+echo "write_enable=NO" > /etc/vsftpd_user_conf/ainur
+
+# 5. Terapkan perubahan dengan merestart layanan vsftpd.
+ /etc/init.d/vsftpd restart
+
+### BAGIAN 2: AKSI DI CLIENT MANWE ###
+
+# 6. Coba koneksi FTP (gagal, 'command not found' karena node di-restart).
+# ftp 10.71.1.1 21
+
+# SOLUSI: Perbaiki DNS di Manwe lalu install ulang FTP client.
+# echo "nameserver 8.8.8.8" > /etc/resolv.conf
+# apt-get update && apt-get install ftp -y
+
+# 7. Lakukan koneksi, download, dan uji coba read-only.
+# Di dalam sesi FTP interaktif, jalankan perintah berikut:
+# > user ainur ainur123
+# > get kitab_penciptaan.zip (Akan berhasil)
+# > put file_gagal.txt (Akan GAGAL dengan 'Permission denied')
+# > bye
+```
+Analisis Skenario ⚙️
+Skenario ini dibagi menjadi dua bagian utama: konfigurasi di sisi server (Eru) dan pengujian di sisi client (Manwe).
+
+Bagian 1: Persiapan di Server Eru
+Tujuannya adalah menempatkan sebuah file di server FTP dan kemudian mengubah hak akses user ainur agar hanya bisa membaca (mengunduh) file, tidak bisa menulis (mengunggah).
+
+Problem Awal: Konfigurasi Hilang
+Setelah node Eru di-restart, semua konfigurasi yang dibuat sebelumnya (user, direktori /srv/ftp/shared, dan instalasi vsftpd) hilang. Ini menyebabkan perintah mv pertama gagal karena direktori tujuan tidak ada.
+
+Solusi
+Solusinya adalah dengan menjalankan kembali script setup_ftp_server_final.sh dari Soal 7. Script ini secara otomatis akan membangun ulang seluruh lingkungan server FTP.
+
+Menempatkan File
+Setelah server kembali normal, proses download file kitab_penciptaan.zip dengan wget dan memindahkannya (mv) ke direktori FTP /srv/ftp/shared/ berhasil dilakukan.
+
+Mengubah Hak Akses
+Perintah `echo "write_enable=NO" > /etc/vsftpd_user_conf/ainur` adalah inti dari soal ini. Ini menimpa file konfigurasi khusus untuk user ainur. Dengan mengatur `write_enable=NO` di sini, kita melarang ainur untuk melakukan upload, rename, atau delete file, meskipun pengaturan global di `/etc/vsftpd.conf` mungkin masih mengizinkannya (write_enable=YES).
+
+**Menerapkan Perubahan**  
+Layanan vsftpd harus di-restart agar membaca ulang file konfigurasi dan menerapkan perubahan hak akses yang baru.
+
+---
+
+**Bagian 2: Aksi di Client Manwe**  
+Tujuannya adalah untuk memverifikasi bahwa user ainur sekarang benar-benar read-only.
+
+**Problem Awal: Client Juga Tereset**  
+Sama seperti Eru, node Manwe juga kehilangan konfigurasinya setelah di-restart. Ini menyebabkan perintah ftp tidak ditemukan (`command not found`) dan koneksi internet (untuk apt-get) gagal karena konfigurasi DNS hilang.
+
+**Solusi**  
+Pertama, DNS diperbaiki dengan menambahkan nameserver Google (8.8.8.8) ke file `/etc/resolv.conf`.  
+Kedua, ftp client diinstal ulang menggunakan apt-get.
+
+**Verifikasi Hak Akses**  
+Setelah berhasil terhubung ke server FTP (10.71.1.1), pengujian dilakukan:  
+- `get kitab_penciptaan.zip`: Perintah ini untuk mengunduh file dari server. Ini berhasil, membuktikan ainur memiliki hak baca.  
+- `put file_gagal.txt`: Perintah ini untuk mengunggah file ke server. Ini gagal dengan pesan `Permission denied`, membuktikan bahwa hak tulis ainur telah berhasil dicabut.
+
+---
+
+### Soal 10: Simulasi Serangan Ping Flood 🌊
+
+Soal ini adalah simulasi serangan Denial of Service (DoS) sederhana yang dikenal sebagai Ping Flood. Tujuannya adalah untuk melihat apakah pengiriman paket ping dalam jumlah banyak secara terus-menerus dapat mengganggu atau memperlambat server target. Serangan ini dilakukan dari node Melkor ke server Eru.
+
+#### Ringkasan Perintah
+
+```bash
+### BAGIAN 1: PERSIAPAN (MENCARI IP ERU) ###
+
+# Di terminal Eru:
+ip a
+# Hasil: Ditemukan IP Eru adalah 10.71.1.1
+
+### BAGIAN 2: EKSEKUSI SERANGAN (DARI MELKOR) ###
+
+# Di terminal Melkor:
+ping -c 100 10.71.1.1
+
+### BAGIAN 3: ANALISIS HASIL ###
+
+# Hasil akhir menunjukkan:
+# -> 0% packet loss
+# -> RTT rata-rata sangat rendah (misal: 0.319 ms)
+# Kesimpulan: Serangan tidak berdampak pada kinerja server Eru.
+```
+Analisis Skenario 🎯
+Persiapan (Mencari Target)
+Langkah pertama adalah mengetahui alamat IP target. Perintah ip a dijalankan di Eru untuk menampilkan semua konfigurasi interface jaringannya, di mana ditemukan bahwa IP-nya adalah 10.71.1.1.
+
+Eksekusi Serangan (Dari Melkor)
+Serangan dilancarkan dari Melkor menggunakan perintah ping:
+ping -c 100 10.71.1.1 mengirimkan 100 paket ICMP Echo Request (paket ping) ke server Eru.
+
+Analisis Hasil dan Kesimpulan
+
+0% packet loss: Semua paket berhasil diterima dan dibalas.
+RTT rendah: Server merespons dengan sangat cepat.
+Kesimpulan: Serangan dengan 100 paket ping tidak berhasil dan tidak memberikan dampak apapun pada kinerja server Eru. Dalam skenario nyata, serangan DoS membutuhkan volume trafik yang jauh lebih besar untuk efektif.
+
+### Soal 11: Analisis Keamanan Protokol Telnet 🕵️‍♂️
+Soal ini bertujuan untuk mendemonstrasikan secara praktis mengapa Telnet dianggap sebagai protokol yang tidak aman (insecure). Skenarionya melibatkan proses instalasi server Telnet, pemecahan masalah agar server berjalan, dan akhirnya "menyadap" proses login menggunakan Wireshark untuk membuktikan kelemahannya.
+
+Ringkasan Perintah
+```
+### BAGIAN 1: PERSIAPAN AWAL SERVER (DI MELKOR) ###
+
+apt-get update && apt-get install telnetd -y
+useradd -m -s /bin/bash eru_guest
+passwd eru_guest
+
+### BAGIAN 2: PERCOBAAN KONEKSI & TROUBLESHOOTING ###
+
+# Di Eru:
+# telnet 10.71.1.1  # Gagal: Connection refused
+# telnet 10.71.1.2  # Gagal: Connection refused (Melkor)
+
+### BAGIAN 3: MEMPERBAIKI SERVER TELNET (DI MELKOR) ###
+
+apt-get install openbsd-inetd -y
+
+# Edit /etc/inetd.conf untuk mengaktifkan telnet (hapus comment)
+# Restart inetd:
+killall inetd
+/usr/sbin/inetd
+netstat -tuln | grep 23  # Pastikan port 23 LISTEN
+
+### BAGIAN 4: KONEKSI BERHASIL & ANALISIS ###
+
+# Di Eru:
+telnet 10.71.1.2
+# Login sebagai eru_guest lalu exit
+
+# Di Wireshark:
+# Filter 'telnet', Follow TCP Stream
+# Username dan password terlihat plaintext
+```
+
+Analisis Skenario dan Pembelajaran
+Telnet berjalan melalui inetd, bukan systemd.
+Telnet tidak terenkripsi, sehingga username dan password dapat disadap dengan mudah.
+Karena alasan keamanan, Telnet sudah tidak direkomendasikan dan digantikan oleh SSH.
+
+### Soal 12: Port Scanning Menggunakan Netcat (nc) 📡
+Soal ini mendemonstrasikan bagaimana Netcat (nc) dapat digunakan sebagai port scanner sederhana untuk memeriksa port terbuka pada server target.
+
+Ringkasan Perintah
+```
+### BAGIAN 1: PERCOBAAN AWAL (DARI ERU) ###
+
+nc -vzw 1 10.71.1.2 21  # Gagal: nc: command not found
+apt-get install netcat-traditional -y
+nc -vzw 1 10.71.1.2 21  # Connection refused (port tertutup)
+
+### BAGIAN 2: MEMPERSIAPKAN SERVER (DI MELKOR) ###
+
+apt-get install vsftpd -y
+/etc/init.d/vsftpd start
+
+apt-get install nginx -y
+/etc/init.d/nginx start
+
+### BAGIAN 3: PEMINDAIAN AKHIR (DARI ERU) ###
+
+nc -vzw 1 10.71.1.2 21  # open
+nc -vzw 1 10.71.1.2 80  # open
+nc -vzw 1 10.71.1.2 666 # Connection refused
+```
+Analisis Skenario dan Pembelajaran
+Netcat dapat digunakan untuk memeriksa status port (open/closed).
+Port terbuka tergantung pada layanan yang berjalan di server target.
+Port tertutup menolak koneksi.
+
+### Soal 13: Analisis Keamanan Protokol SSH (Secure Shell) 🔒
+Soal ini melanjutkan analisis keamanan dengan membandingkan SSH dengan Telnet, menunjukkan mengapa SSH lebih aman.
+
+Ringkasan Perintah
+```
+### BAGIAN 1: PERSIAPAN & TROUBLESHOOTING SERVER (DI ERU) ###
+
+apt-get update && apt-get install openssh-server -y
+/etc/init.d/ssh status  # sshd is not running
+/etc/init.d/ssh start
+/etc/init.d/ssh status  # sshd is running
+
+### BAGIAN 2: PERCOBAAN KONEKSI & TROUBLESHOOTING (DARI VARDA) ###
+
+apt-get update && apt-get install openssh-client -y
+
+ssh root@10.71.1.1  # Permission denied (login root disabled)
+ssh ainur@10.71.1.1  # This account is currently not available (shell nologin)
+
+### BAGIAN 3: MEMPERBAIKI USER & KONEKSI BERHASIL ###
+
+usermod -s /bin/bash ainur  # Ubah shell user ainur
+
+ssh ainur@10.71.1.1
+# Login berhasil, jalankan 'ls' lalu 'exit'
+
+### BAGIAN 4: ANALISIS WIRESHARK ###
+
+# Filter 'ssh', Follow TCP Stream
+# Isi sesi terenkripsi, tidak bisa dibaca
+```
+Analisis Skenario dan Pembelajaran
+SSH mengenkripsi seluruh sesi, melindungi kredensial dan data.
+Login root via password biasanya dinonaktifkan demi keamanan.
+User dengan shell /usr/sbin/nologin tidak bisa login SSH.
+Mengubah shell user ke /bin/bash memungkinkan login SSH.
+Wireshark menunjukkan data SSH terenkripsi, berbeda dengan Telnet.
 
 ## Soal 14
 
